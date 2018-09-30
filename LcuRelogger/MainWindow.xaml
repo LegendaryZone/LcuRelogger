@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LcuRelogger"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="LcuRelogger" Height="395.672" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Visibility="Hidden">
     <Grid>
-        
+
+        <Button Content="Login" HorizontalAlignment="Left" Margin="619,307,0,0" VerticalAlignment="Top" Width="165" Height="51" Click="Button_Click_2" RenderTransformOrigin="0.467,-0.458"/>
+        <Button Content="Add new" HorizontalAlignment="Left" Margin="619,10,0,0" VerticalAlignment="Top" Width="165" Click="Button_Click" />
+        <Button Content="Edit" HorizontalAlignment="Left" Margin="619,34,0,0" VerticalAlignment="Top" Width="165" Click="Button_Click_1" />
+        <Button Content="Delete Selected" HorizontalAlignment="Left" Margin="619,57,0,0" VerticalAlignment="Top" Width="165" Click="Button_Click_3" />
+        <DataGrid HorizontalAlignment="Left" Height="348" Margin="10,10,0,0" VerticalAlignment="Top" Width="604" x:Name="listGrid" AutoGenerateColumns="False" MouseDoubleClick="listGrid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Username" Binding="{Binding Username}" IsReadOnly="True" />
+    
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
 </Window>
