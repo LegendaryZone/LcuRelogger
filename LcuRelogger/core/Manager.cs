@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using Newtonsoft.Json.Linq;
 
 namespace LcuRelogger.core
@@ -9,11 +10,13 @@ namespace LcuRelogger.core
     {
         public string Username { get; private set; }
         public string Password { get; private set; }
+        public string Region { get; private set; }
 
-        public Entry(string username, string password)
+        public Entry(string username, string password, string region)
         {
             this.Username = username;
             this.Password = password;
+            this.Region = region;
         }
     }
 
@@ -41,6 +44,11 @@ namespace LcuRelogger.core
         {
             Api = new Api();
             Connected = Api.init(LeaguePath);
+            if(Connected)
+            {
+                Api.getCurrentRegion();
+
+            }
         }
 
         public void updateLeaguePath(string path)
@@ -75,9 +83,9 @@ namespace LcuRelogger.core
             return true;
         }
 
-        public void AddEntry(string username, string password)
+        public void AddEntry(string username, string password, string region)
         {
-            Entries.Add(new Entry(username, password));
+            Entries.Add(new Entry(username, password, region));
             writeConfig();
         }
 
@@ -92,6 +100,7 @@ namespace LcuRelogger.core
                 var jEntry = new JObject();
                 jEntry["username"] = entry.Username;
                 jEntry["password"] = entry.Password;
+                jEntry["region"] = entry.Region;
 
                 arr.Add(jEntry);
             }
@@ -127,10 +136,22 @@ namespace LcuRelogger.core
 
                 var arr = (JArray) obj["entries"];
 
+                var needsRewrite = false;
                 foreach (JObject entry in arr)
                 {
-                    Entries.Add(new Entry((string) entry["username"], (string) entry["password"]));
+                    if (entry["region"] != null)
+                    {
+                        Entries.Add(new Entry((string)entry["username"], (string)entry["password"], (string)entry["region"]));
+                    }
+                    else
+                    {
+                        needsRewrite = true;
+                        Entries.Add(new Entry((string)entry["username"], (string)entry["password"], "EUW"));
+                        MessageBox.Show("Entry with Username: " + (string) entry["username"] +
+                                        " had no region, fallback to EUW!");
+                    }
                 }
+                if(needsRewrite) writeConfig();
             }
         }
     }

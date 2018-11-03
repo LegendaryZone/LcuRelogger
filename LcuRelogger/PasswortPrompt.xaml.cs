@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using LcuRelogger.core;
 
 namespace LcuRelogger
@@ -33,17 +22,39 @@ namespace LcuRelogger
             {
                 userNameField.Text = entry.Username;
                 passwordField.Password = entry.Password;
+                regionBox.SelectedValue = entry.Region;
                 addBtn.Content = "Save";
             }
+
+            regionBox.ItemsSource = getRegions();
+            
+
         }
 
+        private List<string> getRegions()
+        {
+            var list = new List<string>();
+            list.Add("BR");
+            list.Add("EUNE");
+            list.Add("EUW");
+            list.Add("JP");
+            list.Add("KR");
+            list.Add("LAN");
+            list.Add("LAS");
+            list.Add("NA");
+            list.Add("OCE");
+            list.Add("TR");
+            list.Add("RU");
+
+            return list;
+        }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (_editing)
             
-                _manager.Entries.Remove(_entry);
+               _manager.Entries.Remove(_entry);
             
-            _manager.AddEntry(userNameField.Text, passwordField.Password);
+            _manager.AddEntry(userNameField.Text, passwordField.Password, regionBox.Text);
             Close();
         }
 

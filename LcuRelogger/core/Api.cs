@@ -9,6 +9,8 @@ namespace LcuRelogger.core
 {
     public class Api
     {
+        public string Region { get; private set; }
+        public string Language { get; private set; }
         private int _port;
         private string _lolPath;
         private string _password;
@@ -39,6 +41,12 @@ namespace LcuRelogger.core
             return responseFromServer;
         }
 
+        public string updateRegion(string region)
+        {
+            Region = region;
+            return request("/riotclient/set_region_locale?region=" + region + "&locale=" + Language, null, "POST");
+        }
+
         public string startSession(Entry entry)
         {
             var obj = new JObject();
@@ -47,6 +55,17 @@ namespace LcuRelogger.core
 
             return request("/lol-login/v1/session", obj.ToString(), "POST");
         }
+
+        public void getCurrentRegion()
+        {
+            var response = request("/riotclient/region-locale");
+            var parsed = JObject.Parse(response);
+
+            Region = (string) parsed["region"];
+            Language = (string) parsed["locale"];
+
+        }
+
 
         public bool reloadApi()
         {
@@ -60,23 +79,19 @@ namespace LcuRelogger.core
             request("/process-control/v1/process/restart?delaySeconds=" + delay, null, "POST");
 
 
-            new Thread(() =>
+            var oldPassword = _password;
+            while (true)
             {
-                Thread.CurrentThread.IsBackground = true;
+                Thread.Sleep(25);
 
-                var oldPassword = _password;
-                while (true)
-                {
-                    Thread.Sleep(25);
+                init(_lolPath);
+                if (_password != oldPassword) break;
+            }
 
-                    init(_lolPath);
-                    if (_password != oldPassword) break;
-                }
-
-                _restarting = false;
-                Thread.Sleep(7500);
-                callback();
-            }).Start();
+            _restarting = false;
+            Thread.Sleep(7500);
+            getCurrentRegion();
+            callback();
         }
 
         private static string ReadLockfile(string leagueLocation)

@@ -13,6 +13,7 @@
         <PasswordBox x:Name="passwordField" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Width="423" Height="24"/>
         <Label Content="Username&#xD;&#xA;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Margin="10,0,0,0"/>
         <Label Content="Password&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Height="26"/>
+        <ComboBox HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="120" x:Name="regionBox"/>
 
     </Grid>
 </Window>
